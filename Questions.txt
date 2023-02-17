@@ -1,0 +1,17 @@
+1.Reverse an array from the given position(Easy)
+
+2.find maximum second maximum and reverse(means minimum)
+
+3.Kth smallest element in an array(time:O(N) space:O(log(k)))->using priority_queue
+
+4.sort 0's,1's and 2'second(without using sorting and without using second array use the space given by only swapping the elements) -> (DNF -->(Dutch National Flag Algorithm))
+
+5.Move all negative elements to the end(O(N) and O(N) space complexity)
+
+6.Union find of two arrays (time:(m*n)O(logm) space:(m*n)O(logn))
+
+7.Intersection of two arrays
+
+8.Kadens Algorithm(O(N) -> Finding the maximum sum of the subarray)
+  (Variation of this question is when you have to find the most optimised maximu length subarray with the maximum sum here you have to store the index of the starting point and ending point of the most optimal one)
+
