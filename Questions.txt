@@ -15,3 +15,10 @@
 8.Kadens Algorithm(O(N) -> Finding the maximum sum of the subarray)
   (Variation of this question is when you have to find the most optimised maximu length subarray with the maximum sum here you have to store the index of the starting point and ending point of the most optimal one)
 
+9.Merge two sorted array with time complexity of (O(N*logN)) ans space complexity of(O(1))
+  (Here we uses gap algorithm to solve this problem where you can find the gap using formula(ceil((n1+n2)/2)) and linearly iterating over the elements present in both the arrays having a gap you have to perform the operation untill gap is>=1(if the gap element first >elemtn last than swap both the values)
+
+10.Find the duplicate in an array without using extra space(Time complexity:O(N) Space Complexity:O(1))
+  (Just add value of size of aray to the index and if the sum>=2*n than the index is a duplicate element)
+
+11.Rearrange the elements of the array in the way it is like Max_element,min_element,sec_max,sec_min element and so on.... input: 1 2 3 4 5 6 output:6 1 5 2 4 3
