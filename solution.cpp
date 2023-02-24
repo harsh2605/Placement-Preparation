@@ -245,3 +245,54 @@ int longestConsecutive(vector<int> &nums)
     }
     return ans;
 }
+
+// 14.Three way partioning of the array in this question we have to arrange the array in such a way such that the value of the first section of the array if less than the value of a in range [a,b] and the value greater than b lies in the last and the rest in the center of the array
+// same as DNF algorithm
+void threeWayPartition(vector<int> &nums, int a, int b)
+{
+    // code here
+    int first = 0, sec = 0, last = nums.size() - 1;
+    while (sec <= last)
+    {
+        if (nums[sec] < a)
+        {
+            swap(nums[sec], nums[first]);
+            first++;
+            sec++;
+        }
+        else if (nums[sec] >= a && nums[sec] <= b)
+        {
+            sec++;
+        }
+        else if (nums[sec] > b)
+        {
+            swap(nums[sec], nums[last]);
+            last--;
+        }
+    }
+}
+
+// 15.In this question you have to find which element in the array occurs more than size/2 time in the array
+// time complexity:O(N) and space complexity:O(1);
+// approach : Used here moore voting algorithm
+int majorityElement(vector<int> &nums)
+{
+    int count = 1, ele = nums[0];
+    for (int i = 1; i < nums.size(); i++)
+    {
+        if (ele == nums[i])
+        {
+            count++;
+        }
+        else if (count == 0)
+        {
+            ele = nums[i];
+            count++;
+        }
+        else
+        {
+            count--;
+        }
+    }
+    return ele;
+}
