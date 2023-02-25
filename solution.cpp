@@ -274,7 +274,7 @@ void threeWayPartition(vector<int> &nums, int a, int b)
 
 // 15.In this question you have to find which element in the array occurs more than size/2 time in the array
 // time complexity:O(N) and space complexity:O(1);
-// approach : Used here moore voting algorithm
+// approach : Used here moore voting algo
 int majorityElement(vector<int> &nums)
 {
     int count = 1, ele = nums[0];
