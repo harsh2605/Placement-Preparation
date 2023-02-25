@@ -296,3 +296,124 @@ int majorityElement(vector<int> &nums)
     }
     return ele;
 }
+
+// 16.Arrange the array elements as negative and positive elements with Time complexity O(N*N) and space complexity O(1)
+// input:-5 -2 5 2 4 7 1 8 0 -8  output:-5 5 -2 2 -8 4 7 1 8 0
+
+// This solution is O(N^3) solution
+#include <bits/stdc++.h>
+using namespace std;
+#define ull unsigned long long
+#define ll long long
+void right_rotate(vector<int> &vt, int start, int end)
+{
+    int ele = vt[end];
+    for (int i = end - 1; i >= start; i--)
+    {
+        vt[i + 1] = vt[i];
+    }
+    vt[start] = ele;
+}
+void func(vector<int> &vt)
+{
+    for (int i = 0; i < vt.size(); i++)
+    {
+        if (i % 2 == 0 && vt[i] > 0)
+        {
+            for (int j = i + 1; j < vt.size(); j++)
+            {
+                if (vt[j] < 0)
+                {
+                    right_rotate(vt, i, j);
+                    break;
+                }
+            }
+        }
+        else if (i % 2 == 1 && vt[i] < 0)
+        {
+            for (int j = i + 1; j < vt.size(); j++)
+            {
+                if (vt[j] > 0)
+                {
+                    right_rotate(vt, i, j);
+                    break;
+                }
+            }
+        }
+    }
+}
+int main()
+{
+    int n;
+    cin >> n;
+    vector<int> vt;
+    for (int i = 0; i < n; i++)
+    {
+        int x;
+        cin >> x;
+        vt.push_back(x);
+    }
+    func(vt);
+    for (int i = 0; i < n; i++)
+    {
+        cout << vt[i] << " ";
+    }
+    return 0;
+}
+
+// 17.find the maximum product of the subarray
+// In theis question the basic approach wiil be to traverse the full array from the starting and store the maximum value at each step and similarly traverse the full array from the back and update the maximum value
+// Time complexity: O(N) and space complexity:O(1)
+long long maxProduct(vector<int> arr, int n)
+{
+    // code here
+    long long maxii = 1;
+    long long maxi = INT_MIN;
+    for (int i = 0; i < arr.size(); i++)
+    {
+        maxii *= arr[i];
+        maxi = max(maxi, maxii);
+        if (maxii == 0)
+        {
+            maxii = 1;
+        }
+    }
+    maxii = 1;
+    for (int i = n - 1; i >= 0; i--)
+    {
+        maxii *= arr[i];
+        maxi = max(maxi, maxii);
+        if (maxii == 0)
+            maxii = 1;
+    }
+    return maxi;
+}
+
+// 18.Merge Intervals
+// In this question we have to merge all the intervals
+// input:[[1,3],[2,6],[8,10],[15,18]] output:[[1,6],[8,10],[15,18]]
+// time complxity:O(N) ,Space complexity:O(1)
+vector<vector<int>> merge(vector<vector<int>> &intervals)
+{
+    vector<vector<int>> ans;
+
+    sort(intervals.begin(), intervals.end());
+    vector<int> temp = intervals[0];
+
+    for (auto it : intervals)
+    {
+        if (temp[1] >= it[0])
+        {
+            temp[1] = max(temp[1], it[1]);
+        }
+        else
+        {
+            ans.push_back(temp);
+            temp = it;
+        }
+    }
+
+    ans.push_back(temp);
+
+    return ans;
+}
