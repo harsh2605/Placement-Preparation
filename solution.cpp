@@ -362,7 +362,7 @@ int main()
 }
 
 // 17.find the maximum product of the subarray
-// In theis question the basic approach wiil be to traverse the full array from the starting and store the maximum value at each step and similarly traverse the full array from the back and update the maximum value
+// In this question the basic approach wiil be to traverse the full array from the starting and store the maximum value at each step and similarly traverse the full array from the back and update the maximum value
 // Time complexity: O(N) and space complexity:O(1)
 long long maxProduct(vector<int> arr, int n)
 {
@@ -420,4 +420,4 @@ vector<vector<int>> merge(vector<vector<int>> &intervals)
 
 
 
-you can do it
+//you can do it
