@@ -418,6 +418,43 @@ vector<vector<int>> merge(vector<vector<int>> &intervals)
     return ans;
 }
 
+// factorila of a number
+// Normal method to calculate the factorial is using recursion with time complexity O(N)
+int func(int n)
+{
+    if (n == 0)
+        return 1;
+    return n * func(n - 1);
+}
+int main()
+{
+    int n;
+    cin >> n;
+    cout << func(n);
+}
 
-
-//you can do it
+// for big number factoial is find by different method time complexity of this approach will be
+// Time complexity:O(n*log(n!)) and space complexity : O(N)
+vector<int> factorial(int N)
+{
+    // code here
+    vector<int> store;
+    store.push_back(1);
+    int carry = 0;
+    for (int i = 2; i <= N; i++)
+    {
+        for (int j = 0; j < store.size(); j++)
+        {
+            int ele = store[j] * i + carry;
+            store[j] = ele % 10;
+            carry = ele / 10;
+        }
+        while (carry != 0)
+        {
+            store.push_back(carry % 10);
+            carry /= 10;
+        }
+    }
+    reverse(store.begin(), store.end());
+    return store;
+}
