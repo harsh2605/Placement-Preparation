@@ -1,3 +1,5 @@
+// This file is maintained to cover all the important question based on arrays and hashing,two pointers and prefix sum,suffix sum
+
 // programme to find the second minimum of a number in O(N) time complexity in one go
 #include <bits/stdc++.h>
 using namespace std;
@@ -418,7 +420,7 @@ vector<vector<int>> merge(vector<vector<int>> &intervals)
     return ans;
 }
 
-// factorila of a number
+// 19.factorila of a number
 // Normal method to calculate the factorial is using recursion with time complexity O(N)
 int func(int n)
 {
@@ -433,8 +435,8 @@ int main()
     cout << func(n);
 }
 
-// for big number factoial is find by different method time complexity of this approach will be
-// Time complexity:O(n*log(n!)) and space complexity : O(N)
+// 20.for big number factoial is find by different method time complexity of this approach will be
+//  Time complexity:O(n*log(n!)) and space complexity : O(N)
 vector<int> factorial(int N)
 {
     // code here
@@ -459,7 +461,7 @@ vector<int> factorial(int N)
     return store;
 }
 
-// Minimum number of operations to bring all numbers <=k together
+// 21.Minimum number of operations to bring all numbers <=k together
 // This problem is similar to the problem where all ones are to be move to their adjacent by using minimum number of opeartion
 // approach:In this we created a window size of number of element <=k and count the maximum element in the window which is <=k and the final answer will be (total_count-maxi)
 int minSwap(int arr[], int n, int k)
@@ -502,4 +504,63 @@ int minSwap(int arr[], int n, int k)
         }
     }
     return count == 0 ? 0 : count - maxi;
+}
+
+// Prefix sum and hashing concepts
+// Some important Properties of mod:
+//(a+b)%k=((a%k)+(b%k))%k;
+//(a-b)%k=((a%k)-(b%k))%k;
+//(a*b)%k=((a%k)*(b%k))%k;
+// 22.Continuous Subarray Sum(In this question  you have to find out their exist a subarray whose length is>=2 and the sum of that subaray is divisble by k)
+// approach : It is based on the approach that if any number suppose 6%5==1 than if we add some arbitary contant into it (6+5)%5==1 (((6+5)-6)%5==0 (hence proved))and it is giving the same reminer than the arbitary number is divisble by k so that arbitary number is the sum of number in the range of first occurance of that reminder and second occurance oif that reminder
+bool checkSubarraySum(vector<int> &nums, int k)
+{
+    unordered_map<int, int> mp;
+    for (int i = 1; i < nums.size(); i++)
+    {
+        nums[i] += nums[i - 1];
+    }
+    for (int i = 0; i < nums.size(); i++)
+    {
+        if (nums[i] % k == 0 && i != 0)
+        {
+            return true;
+        }
+        if (mp.find(nums[i] % k) != mp.end())
+        {
+            if (i - mp[nums[i] % k] > 1)
+                return true;
+        }
+        else
+        {
+            mp[nums[i] % k] = i;
+        }
+    }
+    return false;
+}
+
+// 23.Subarray sum divisible by k
+// The main approach is if suppose sum part of the array is divible by k and leaves the remainder k than the equation will bes1=(k*n+x) and some part including that is divisble by k and leaves the remainder k than the equation will be s2=(k*m+x) therefore the final equation will be s1-s2=k*(n-m) therefore we can see that the remaining element are divisible by k
+// If the remainder is newgative just add k to it
+long long subCount(long long arr[], int N, long long k)
+{
+    // Your code goes here
+    long long ans = 0;
+    unordered_map<int, int> mp;
+    mp[0]++;
+    for (int i = 1; i < N; i++)
+    {
+        arr[i] += arr[i - 1];
+    }
+    for (int i = 0; i < N; i++)
+    {
+        int rem = arr[i] % k;
+        if (rem < 0)
+        {
+            rem += k;
+        }
+        ans += mp[rem];
+        mp[rem]++;
+    }
+    return ans;
 }
