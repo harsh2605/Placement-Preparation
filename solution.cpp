@@ -458,3 +458,48 @@ vector<int> factorial(int N)
     reverse(store.begin(), store.end());
     return store;
 }
+
+// Minimum number of operations to bring all numbers <=k together
+// This problem is similar to the problem where all ones are to be move to their adjacent by using minimum number of opeartion
+// approach:In this we created a window size of number of element <=k and count the maximum element in the window which is <=k and the final answer will be (total_count-maxi)
+int minSwap(int arr[], int n, int k)
+{
+    // Complet the function
+    int i = 0, j = 0;
+    int maxi = INT_MIN;
+    int count = 0, ans = 0;
+    for (int i = 0; i < n; i++)
+    {
+        if (arr[i] <= k)
+        {
+            count++;
+        }
+    }
+    while (j < n)
+    {
+        if (j - i + 1 < count)
+        {
+            if (arr[j] <= k)
+            {
+                ans++;
+            }
+            maxi = max(maxi, ans);
+            j++;
+        }
+        else
+        {
+            if (arr[j] <= k)
+            {
+                ans++;
+                maxi = max(maxi, ans);
+            }
+            if (arr[i] <= k)
+            {
+                ans--;
+            }
+            i++;
+            j++;
+        }
+    }
+    return count == 0 ? 0 : count - maxi;
+}
