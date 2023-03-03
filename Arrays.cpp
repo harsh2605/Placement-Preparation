@@ -152,6 +152,7 @@ int main()
 // find duplcaite elements in O(1) Space complexity
 // input:{2,3,1,2,3} output:2,3
 // In this question the elements present in the array is between 1 to N-1
+// if the elements present in the array were from 1 to N and you donot have to modify the array than you will use cyle detection algorithm and use fast pointer and slow pointer concept(tc:O(N),sc:O(1))
 vector<int> duplicates(int arr[], int n)
 {
     // code here
@@ -561,6 +562,27 @@ long long subCount(long long arr[], int N, long long k)
         }
         ans += mp[rem];
         mp[rem]++;
+    }
+    return ans;
+}
+
+// 24.Subarray sum equal to k
+// prefix sum concept
+// approach :The approach is if the sum of some range is y and y-k is also available than the range between them is k .
+int subarraySum(vector<int> &nums, int k)
+{
+    unordered_map<int, int> mp;
+    mp[0] = 1;
+    int ans = 0;
+    for (int i = 0; i < nums.size(); i++)
+    {
+        if (i != 0)
+            nums[i] += nums[i - 1];
+        if (mp.find(nums[i] - k) != mp.end())
+        {
+            ans += mp[nums[i] - k];
+        }
+        mp[nums[i]]++;
     }
     return ans;
 }
