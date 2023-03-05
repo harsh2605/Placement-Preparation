@@ -17,25 +17,31 @@ void func(vector<int> &vt)
     {
         if (i % 2 == 0 && vt[i] > 0)
         {
+            int ele = -1;
             for (int j = i + 1; j < vt.size(); j++)
             {
                 if (vt[j] < 0)
                 {
-                    right_rotate(vt, i, j);
+                    ele = j;
                     break;
                 }
             }
+            if (ele != -1)
+                right_rotate(vt, i, ele);
         }
         else if (i % 2 == 1 && vt[i] < 0)
         {
+            int ele = -1;
             for (int j = i + 1; j < vt.size(); j++)
             {
                 if (vt[j] > 0)
                 {
-                    right_rotate(vt, i, j);
+                    ele = j;
                     break;
                 }
             }
+            if (ele != -1)
+                right_rotate(vt, i, ele);
         }
     }
 }

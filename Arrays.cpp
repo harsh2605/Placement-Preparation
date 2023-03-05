@@ -200,7 +200,7 @@ void rearrange(long long *arr, int n)
     }
 }
 
-// 12.find the if the sum of any subarray elements in the subarray sum upyo 0 or not
+// 12.find the if the sum of any subarray elements in the subarray sum upto 0 or not
 // input:{4 2 -3 1 6} output:YES(2,-3,1) sum upto 0;
 // My approach using prefix sum if two elements sum upto the same value || any sumation value is 0 than YES if no such elemets present than NO
 
@@ -585,4 +585,173 @@ int subarraySum(vector<int> &nums, int k)
         mp[nums[i]]++;
     }
     return ans;
+}
+
+// 25. find the triplet sum time:O(N^2) space:O(N)
+bool find3Numbers(int A[], int n, int X)
+{
+    // Your Code Here
+    for (int i = 0; i < n; i++)
+    {
+        int store = X - A[i];
+        unordered_map<int, int> mp;
+        for (int j = i + 1; j < n; j++)
+        {
+            if (mp.find(store - A[j]) != mp.end())
+                return true;
+            mp[A[j]]++;
+        }
+    }
+    return false;
+}
+
+// same question with time complexity O(N^2) and space:O(1);
+bool find3Numbers(int A[], int n, int X)
+{
+    // Your Code Here
+    sort(A, A + n);
+    for (int i = 0; i < n; i++)
+    {
+        int low = i + 1, high = n - 1;
+        int store = X - A[i];
+        while (low < high)
+        {
+            if (A[i] + A[low] + A[high] == X)
+            {
+                return true;
+            }
+            if (A[low] + A[high] < store)
+            {
+                low++;
+            }
+            else
+            {
+                high--;
+            }
+        }
+    }
+    return false;
+}
+
+// 26.Arraneg the array elements in alternating postive and negative elements without using any extra spaces
+#include <bits/stdc++.h>
+using namespace std;
+#define ull unsigned long long
+#define ll long long
+void right_rotate(vector<int> &vt, int start, int end)
+{
+    int ele = vt[end];
+    for (int i = end - 1; i >= start; i--)
+    {
+        vt[i + 1] = vt[i];
+    }
+    vt[start] = ele;
+}
+void func(vector<int> &vt)
+{
+    for (int i = 0; i < vt.size(); i++)
+    {
+        if (i % 2 == 0 && vt[i] > 0)
+        {
+            int ele = -1;
+            for (int j = i + 1; j < vt.size(); j++)
+            {
+                if (vt[j] < 0)
+                {
+                    ele = j;
+                    break;
+                }
+            }
+            if (ele != -1)
+                right_rotate(vt, i, ele);
+        }
+        else if (i % 2 == 1 && vt[i] < 0)
+        {
+            int ele = -1;
+            for (int j = i + 1; j < vt.size(); j++)
+            {
+                if (vt[j] > 0)
+                {
+                    ele = j;
+                    break;
+                }
+            }
+            if (ele != -1)
+                right_rotate(vt, i, ele);
+        }
+    }
+}
+int main()
+{
+    int n;
+    cin >> n;
+    vector<int> vt;
+    for (int i = 0; i < n; i++)
+    {
+        int x;
+        cin >> x;
+        vt.push_back(x);
+    }
+    func(vt);
+    for (int i = 0; i < n; i++)
+    {
+        cout << vt[i] << " ";
+    }
+    return 0;
+}
+
+// 27.Find the median of two sorted array of different size
+// time complexity O(log(m+n)) size :O(1)
+// approach if the sum of size of both the arrays are odd than only return the middle element else return the sum of middle and the previous element
+double MedianOfArrays(vector<int> &nums1, vector<int> &nums2)
+{
+    // Your code goes here
+    int i = 0, j = 0;
+    int size = (nums1.size() + nums2.size()) / 2;
+    int count = 0, first = INT_MAX, sec = INT_MAX, p = 0; // where first define the n-1 th term and n defines the nth term
+    while (i < nums1.size() && j < nums2.size())
+    {
+        if (nums1[i] < nums2[j])
+        {
+            p = nums1[i];
+            i++;
+        }
+        else
+        {
+            p = nums2[j];
+            j++;
+        }
+        if (count == size - 1)
+            first = p;
+        if (count == size)
+        {
+            sec = p;
+            break;
+        }
+        count++;
+    }
+    if (sec == INT_MAX)
+    {
+        while (i < nums1.size())
+        {
+            if (count == size - 1)
+                first = nums1[i];
+            if (count == size)
+                sec = nums1[i];
+            i++;
+            count++;
+        }
+        while (j < nums2.size())
+        {
+            if (count == size - 1)
+                first = nums2[j];
+            if (count == size)
+                sec = nums2[j];
+            j++;
+            count++;
+        }
+    }
+    if ((nums1.size() + nums2.size()) & 1)
+        return sec;
+    return ((first + sec) / (double)2);
 }
