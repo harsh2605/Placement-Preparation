@@ -755,3 +755,59 @@ double MedianOfArrays(vector<int> &nums1, vector<int> &nums2)
         return sec;
     return ((first + sec) / (double)2);
 }
+
+// 28.Subarray with k different integers
+int calc(vector<int> &nums, int k)
+{
+    int i = 0, j = 0;
+    unordered_map<int, int> mp;
+    int count = 0;
+    while (j < nums.size())
+    {
+        mp[nums[j]]++;
+        while (mp.size() > k)
+        {
+            mp[nums[i]]--;
+            if (mp[nums[i]] == 0)
+                mp.erase(nums[i]);
+            i++;
+        }
+        count += (j - i + 1);
+        j++;
+    }
+    return count;
+}
+int subarraysWithKDistinct(vector<int> &nums, int k)
+{
+    return calc(nums, k) - calc(nums, k - 1);
+}
+
+// 29.contigious subarray
+// In this question we have to find the longest subarray with equal numbers of 0's and 1's
+// The approach is make all the 0 in the array as -1 and calculate the longest substring having sum 0
+int findMaxLength(vector<int> &nums)
+{
+    for (int i = 0; i < nums.size(); i++)
+    {
+        if (nums[i] == 0)
+            nums[i] = -1;
+    }
+    int j = 0;
+    unordered_map<int, int> mp;
+    mp[0] = -1;
+    int maxi = 0, sum = 0;
+    while (j < nums.size())
+    {
+        sum += nums[j];
+        if (mp.find(sum) != mp.end())
+        {
+            maxi = max(maxi, j - mp[sum]);
+        }
+        else
+        {
+            mp[sum] = j;
+        }
+        j++;
+    }
+    return maxi;
+}
