@@ -1,65 +1,30 @@
-#include <bits/stdc++.h>
+#include <iostream>
+#include <vector>
 using namespace std;
-#define ull unsigned long long
-#define ll long long
-void right_rotate(vector<int> &vt, int start, int end)
-{
-    int ele = vt[end];
-    for (int i = end - 1; i >= start; i--)
-    {
-        vt[i + 1] = vt[i];
+
+int num_subarrays_less_than_k(vector<int>& arr, int k) {
+    int count = 0;
+    int left = 0;
+    int subarray_sum = 0;
+    vector<int> prefix_sum(arr.size() + 1);
+    for (int i = 1; i < prefix_sum.size(); i++) {
+        prefix_sum[i] = prefix_sum[i-1] + arr[i-1];
     }
-    vt[start] = ele;
-}
-void func(vector<int> &vt)
-{
-    for (int i = 0; i < vt.size(); i++)
-    {
-        if (i % 2 == 0 && vt[i] > 0)
-        {
-            int ele = -1;
-            for (int j = i + 1; j < vt.size(); j++)
-            {
-                if (vt[j] < 0)
-                {
-                    ele = j;
-                    break;
-                }
-            }
-            if (ele != -1)
-                right_rotate(vt, i, ele);
+    for (int right = 0; right < arr.size(); right++) {
+        subarray_sum += arr[right];
+        while (subarray_sum >= k) {
+            subarray_sum -= arr[left];
+            left++;
         }
-        else if (i % 2 == 1 && vt[i] < 0)
-        {
-            int ele = -1;
-            for (int j = i + 1; j < vt.size(); j++)
-            {
-                if (vt[j] > 0)
-                {
-                    ele = j;
-                    break;
-                }
-            }
-            if (ele != -1)
-                right_rotate(vt, i, ele);
-        }
+        count += right - left + 1;
     }
+    return count;
 }
-int main()
-{
-    int n;
-    cin >> n;
-    vector<int> vt;
-    for (int i = 0; i < n; i++)
-    {
-        int x;
-        cin >> x;
-        vt.push_back(x);
-    }
-    func(vt);
-    for (int i = 0; i < n; i++)
-    {
-        cout << vt[i] << " ";
-    }
+
+int main() {
+    vector<int> arr = {3, -2, 4, -1, 2, -7, 5, -3, 6};
+    int k = 4;
+    int result = num_subarrays_less_than_k(arr, k);
+    cout << "Number of subarrays with sum less than " << k << ": " << result << endl;
     return 0;
 }
