@@ -1,30 +1,44 @@
-#include <iostream>
-#include <vector>
+#include <bits/stdc++.h>
 using namespace std;
-
-int num_subarrays_less_than_k(vector<int>& arr, int k) {
-    int count = 0;
-    int left = 0;
-    int subarray_sum = 0;
-    vector<int> prefix_sum(arr.size() + 1);
-    for (int i = 1; i < prefix_sum.size(); i++) {
-        prefix_sum[i] = prefix_sum[i-1] + arr[i-1];
-    }
-    for (int right = 0; right < arr.size(); right++) {
-        subarray_sum += arr[right];
-        while (subarray_sum >= k) {
-            subarray_sum -= arr[left];
-            left++;
+#define ull unsigned long long
+#define ll long long
+void solve(string &s, int k)
+{
+    unordered_map<char, int> mp;
+    int i = 0, j = 0, ans = 0;
+    while (j < s.size())
+    {
+        mp[s[j]]++;
+        if (mp.size() < k)
+        {
+            j++;
         }
-        count += right - left + 1;
+        else if (mp.size() == k)
+        {
+            ans++;
+        }
+        else
+        {
+            mp.erase(s[j]);
+            while (mp.size() == k)
+            {
+                ans++;
+                mp[s[i]]--;
+                if (mp[s[i]] == 0)
+                {
+                    mp.erase(s[i]);
+                }
+                i++;
+            }
+        }
     }
-    return count;
 }
-
-int main() {
-    vector<int> arr = {3, -2, 4, -1, 2, -7, 5, -3, 6};
-    int k = 4;
-    int result = num_subarrays_less_than_k(arr, k);
-    cout << "Number of subarrays with sum less than " << k << ": " << result << endl;
+int main()
+{
+    string s;
+    cin >> s;
+    int k;
+    cin >> k;
+    solve(s, k);
     return 0;
 }

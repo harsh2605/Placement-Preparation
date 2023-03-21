@@ -45,7 +45,6 @@ int numSubarrayProductLessThanK(vector<int> &nums, int k)
     }
     return ans;
 }
-}
 
 // Count number of substring in which their are atleast k distinct characters
 #include <bits/stdc++.h>
@@ -73,7 +72,9 @@ int solve(string &s, int k)
 }
 
 // Subarray with k different integers
+// Same variation question of counting substring having exactly k distinct characters
 // This question is the variation of using both atmost k charcaters and than finding exactly k characters subarrays
+// Approach find the count of number of subarrays having atmost k charcaters and subtract it from the number of arrays having exactly k-1 distinct characters
 int atmost_k_characters(vector<int> &nums, int k)
 {
     int i = 0, j = 0;
@@ -97,4 +98,31 @@ int atmost_k_characters(vector<int> &nums, int k)
 int subarraysWithKDistinct(vector<int> &nums, int k)
 {
     return atmost_k_characters(nums, k) - atmost_k_characters(nums, k - 1);
+}
+
+// Number of Substrings Containing All Three Characters
+// You are provided with a string containing of only three characters a,b,c in repeated manner you have to count the total number of substring which has 3 character.
+// Approach : Isme bas jab hume 3 character wala substring encounter ho jiega than all the characters next to the substring ke sath wo substring to baniega hi na to uske n-j se count kar lengai jab tak map ka size is=3 usko repeatedly add karte ja rhe hai
+int numberOfSubstrings(string s)
+{
+    int n = s.size(), count = 0;
+    unordered_map<char, int> mp;
+    int i = 0, j = 0;
+    while (j < s.size())
+    {
+        mp[s[j]]++;
+        if (mp.size() == 3)
+        {
+            while (mp.size() == 3)
+            {
+                count += n - j;
+                mp[s[i]]--;
+                if (mp[s[i]] == 0)
+                    mp.erase(s[i]);
+                i++;
+            }
+        }
+        j++;
+    }
+    return count;
 }
