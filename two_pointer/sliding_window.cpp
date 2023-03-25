@@ -160,3 +160,107 @@ vector<int> maxSlidingWindow(vector<int> &nums, int k)
     }
     return ans;
 }
+
+// Given a binary array, find the maximum sequence of continuous 1’s that can be formed by replacing at most k zeroes by ones.
+pair<int, int> solve(vector<int> &vt, int &k)
+{
+    unordered_map<int, int> mp;
+    int i = 0, j = 0;
+    int maxi = INT_MIN, count = 0, point = 0;
+    int index = 0;
+    pair<int, int> pt{-1, -1};
+    while (j < vt.size())
+    {
+        if (vt[j] == 0)
+            point++;
+        if (point <= k)
+        {
+            count++;
+            if (count > maxi)
+            {
+                maxi = count;
+                pt.first = i;
+                pt.second = j;
+            }
+        }
+        else if (point > k)
+        {
+            while (point != k)
+            {
+                if (vt[i] == 0)
+                    point--;
+                i++;
+            }
+            if (j - i + 1 > maxi)
+            {
+                maxi = j - i + 1;
+                pt.first = i;
+                pt.second = j;
+            }
+            count = j - i + 1;
+        }
+        j++;
+    }
+    return pt;
+}
+
+// Given an array. Calculate the sum of lengths of contiguous subarrays having all distinct elements.
+int sumoflength(int s[], int n)
+{
+    unordered_map<int, int> mp;
+    int i = 0, j = 0, count = 0;
+    while (j < n)
+    {
+        mp[s[j]]++;
+        if (mp.size() == j - i + 1)
+        {
+            int store = j - i + 1;
+            count += ((store) * (store + 1)) / 2;
+            j++;
+        }
+        else
+        {
+            while (mp.size() != j - i + 1)
+            {
+                mp[s[i]]--;
+                if (mp[s[i]] == 0)
+                    mp.erase(s[i]);
+                i++;
+            }
+            count += ((j - i + 1) * (j - i + 2)) / 2;
+            j++;
+        }
+    }
+    return count;
+}
+
+// Shortest Subarray with sum at least k
+// Isme humko jo deque bananana hota hai wo hamesa monotonically increasing hona chaiye
+int shortestSubarray(vector<int> &nums, int k)
+{
+    deque<pair<long long int, long long int>> dq;
+    long long int i = 0, j = 0, sum = 0;
+    long long int mini = INT_MAX;
+    while (j < nums.size())
+    {
+        sum += nums[j];
+        if (sum >= k)
+        {
+            mini = min(mini, j + 1);
+        }
+        pair<int, int> curr = {INT_MAX, INT_MAX};
+        while (!dq.empty() && sum - dq.front().first >= k)
+        {
+            mini = min(mini, j - dq.front().second);
+            curr = dq.front();
+            dq.pop_front();
+        }
+        while (!dq.empty() && sum <= dq.back().first)
+        {
+            dq.pop_back();
+        }
+        dq.push_back({sum, j});
+        j++;
+    }
+    return mini == INT_MAX ? -1 : mini;
+}
