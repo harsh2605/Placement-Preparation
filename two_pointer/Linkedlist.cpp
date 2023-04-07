@@ -339,3 +339,204 @@ void reorderList(ListNode *head)
         fast = temp2;
     }
 }
+
+// Now comes the turn of Doubly linkedlist
+// Reverse a doubly linkedlist
+int miceAndCheese(vector<int> &r1, vector<int> &r2, int k)
+{
+    int sum = 0;
+    vector<int> vt;
+    for (int i = 0; i < r1.size(); i++)
+    {
+        sum += r2[i];
+        vt.push_back(r1[i] - r2[i]);
+    }
+    sort(vt.begin(), vt.end(), greater<int>());
+    int i = 0;
+    while (k--)
+    {
+        sum += vt[i];
+        i++;
+    }
+    return sum;
+}
+
+// Very intresting question if we solve this question using linkedlist the time complexity will be O(N) but with the help of a array the time complexity will be O(N^2);
+//  Remove Zero Sum Consecutive Nodes from Linked List
+// In this question we have to remve the subarray whose sum is 0
+ListNode *removeZeroSumSublists(ListNode *head)
+{
+    ListNode *dummy = new ListNode(0);
+    dummy->next = head;
+    int presum = 0;
+    unordered_map<int, ListNode *> mp;
+    mp[0] = dummy;
+    while (head != NULL)
+    {
+        presum += head->val;
+        if (mp.find(presum) != mp.end())
+        {
+            ListNode *start = mp[presum];
+            int sum = presum;
+            while (start != head)
+            {
+                start = start->next;
+                sum += start->val;
+                if (start != head)
+                {
+                    mp.erase(sum);
+                }
+            }
+            mp[presum]->next = head->next;
+        }
+        else
+        {
+            mp[presum] = head;
+        }
+        head = head->next;
+    }
+    return dummy->next;
+}
+
+// LRU CACHE (Least Recently Used)
+// head side se most recently used wala elements hai and tail side se LRU elements present hai
+class LRUCache
+{
+public:
+    class node
+    {
+    public:
+        int key;
+        int val;
+        node *next;
+        node *prev;
+        node(int _key, int _val)
+        {
+            key = _key;
+            val = _val;
+        }
+    };
+
+    node *head = new node(-1, -1);
+    node *tail = new node(-1, -1);
+
+    int cap;
+    unordered_map<int, node *> mp;
+
+    LRUCache(int capacity)
+    {
+        cap = capacity;
+        head->next = tail;
+        tail->prev = head;
+    }
+
+    void addNode(node *newnode)
+    {
+        node *temp = head->next;
+        newnode->next = temp;
+        newnode->prev = head;
+        head->next = newnode;
+        temp->prev = newnode;
+    }
+
+    void deleteNode(node *delnode)
+    {
+        node *deleteprev = delnode->prev;
+        node *deletenext = delnode->next;
+        free(delnode);
+        deleteprev->next = deletenext;
+        deletenext->prev = deleteprev;
+    }
+
+    int get(int key)
+    {
+        if (mp.find(key) != mp.end())
+        {
+            node *tempnode = mp[key];
+            int ans = tempnode->val;
+            mp.erase(key);
+            deleteNode(tempnode);
+            addNode(tempnode);
+            mp[key] = head->next;
+            return ans;
+        }
+
+        return -1;
+    }
+
+    void put(int key, int value)
+    {
+        if (mp.find(key) != mp.end())
+        {
+            node *tempnode = mp[key];
+            mp.erase(key);
+            deleteNode(tempnode);
+        }
+
+        if (mp.size() == cap)
+        {
+            mp.erase(tail->prev->key);
+            deleteNode(tail->prev);
+        }
+
+        addNode(new node(key, value));
+        mp[key] = head->next;
+    }
+};
+
+// search in a binary matrix
+// time:O(log (m*n)) space:O(1);
+// thisquestion can simply solved using binary search in which you have to play with the index and think where to move the low and high pointers initially the low pointer is 0 and the high pointer is (n*m-1)
+bool searchMatrix(vector<vector<int>> &matrix, int target)
+{
+    int i = 0, j = matrix[0].size() - 1;
+    while (i < matrix.size() && j >= 0)
+    {
+        if (matrix[i][j] == target)
+            return true;
+        else if (matrix[i][j] > target)
+        {
+            j--;
+        }
+        else
+            i++;
+    }
+    return false;
+}
+
+// Spiral matrix traversal
+// Time complexity:O(N*M);
+// space complexity:O(N*M);
+vector<int> spiralOrder(vector<vector<int>> &matrix)
+{
+    int left = 0, right = matrix[0].size() - 1, bottom = matrix.size() - 1, top = 0;
+    vector<int> ans;
+    while (top <= bottom && left <= right)
+    {
+        for (int i = left; i <= right; i++)
+        {
+            ans.push_back(matrix[top][i]);
+        }
+        top++;
+        for (int i = top; i <= bottom; i++)
+        {
+            ans.push_back(matrix[i][right]);
+        }
+        right--;
+        if (top <= bottom)
+        {
+            for (int i = right; i >= left; i--)
+            {
+                ans.push_back(matrix[bottom][i]);
+            }
+            bottom--;
+        }
+        if (left <= right)
+        {
+            for (int i = bottom; i >= top; i--)
+                ans.push_back(matrix[i][left]);
+            left++;
+        }
+    }
+    return ans;
+}
