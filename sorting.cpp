@@ -135,3 +135,199 @@ vector<int> majorityElement(vector<int> &nums)
         ans.push_back(ele2);
     return ans;
 }
+
+// 4.3sum problem(finding triplet which will sum upto 0)
+// Time complexity:O(N^2) and space complexity:O(1)
+// To get the unique triplet we will not consider the elements which will repeat and hence move the pointers accorndingly
+vector<vector<int>> threeSum(vector<int> &nums)
+{
+    sort(nums.begin(), nums.end());
+    vector<vector<int>> res;
+    if (nums.size() == 0 || nums.size() == 1)
+        return res;
+    for (int i = 0; i < nums.size() - 2; i++)
+    {
+        if (i == 0 || (i > 0 && (nums[i] != nums[i - 1])))
+        {
+            int low = i + 1, high = nums.size() - 1, store = 0 - nums[i];
+            while (low < high)
+            {
+                if (nums[low] + nums[high] == store)
+                {
+                    vector<int> ans;
+                    ans.push_back(nums[i]);
+                    ans.push_back(nums[low]);
+                    ans.push_back(nums[high]);
+                    res.push_back(ans);
+                    while (low < high && nums[low] == nums[low + 1])
+                        low++;
+                    while (low < high && nums[high] == nums[high - 1])
+                        high--;
+                    low++;
+                    high--;
+                }
+                else if (nums[low] + nums[high] < store)
+                    low++;
+                else
+                    high--;
+            }
+        }
+    }
+    return res;
+}
+
+// 5.count triplet whose sum is less than the given value
+long long countTriplets(long long arr[], int n, long long sum)
+{
+    // Your code goes here
+    sort(arr, arr + n);
+    long long ans = 0;
+    for (int i = 0; i < n; i++)
+    {
+        int j = i + 1, k = n - 1;
+        while (j < k)
+        {
+            long long res = arr[i] + arr[j] + arr[k];
+            if (res < sum)
+            {
+                ans += (k - j);
+                j++;
+            }
+            else
+            {
+                k--;
+            }
+        }
+    }
+    return ans;
+}
+
+// 6.3sum closest (You have to find the triplet sum which is much closer to target or it can be target)
+int threeSumClosest(vector<int> &nums, int target)
+{
+    sort(nums.begin(), nums.end());
+    int ans, dif = INT_MAX;
+    for (int i = 0; i < nums.size(); i++)
+    {
+        int j = i + 1, k = nums.size() - 1;
+        while (j < k)
+        {
+            int store = nums[i] + nums[j] + nums[k];
+            if (store == target)
+            {
+                return target;
+            }
+            else if (store < target)
+            {
+                if (abs(store - target) < dif)
+                {
+                    ans = store;
+                    dif = abs(store - target);
+                }
+                j++;
+            }
+            else
+            {
+                if (abs(store - target) < dif)
+                {
+                    ans = store;
+                    dif = abs(store - target);
+                }
+                k--;
+            }
+        }
+    }
+    return ans;
+}
+
+// 7.Merge two sorted arrays
+// Input :arr1=[1,3,5,7] ,arr2=[0,2,6,8,9]
+// output:arr1=[0,1,2,3] arr2=[5,6,7,8,9]
+
+// In this the first approach will be we will take the first element of the second array and check with the last element of the first array if the second arrays element is smaller than the first array element than we will swap the numbers and move the pointers if it is not than we will break the loop and after that we will sort both the arrays
+
+// The second approach will be gap method
+// In this method what we do is that we will take the gap as =(arr1.size()+arr2.size())/2;
+// Time complexity:O((n+m)*log(n+m))
+// space complexity:O(1)
+void solve(vector<int> &vt1, vector<int> &vt2)
+{
+    int gap = (vt1.size() + vt2.size()) / 2 + (vt1.size() + vt2.size()) % 2;
+    int len = vt1.size() + vt2.size();
+    while (gap > 0)
+    {
+        int left = 0;
+        int right = left + gap;
+        while (right < len)
+        {
+            // arr1 and arr1
+            if (right < vt1.size() && vt1[left] < vt1[right])
+            {
+                swap(vt1[left], vt1[right]);
+            }
+            // arr1 and arr2
+            else if (left < vt1.size() && vt1[left] < vt2[right - vt1.size()])
+            {
+                swap(vt1[left], vt2[right - vt1.size()]);
+            }
+
+            // arr2 and arr2
+            else if (left >= vt1.size())
+            {
+                swap(vt2[left - vt1.size()], vt2[right - vt1.size()]);
+            }
+            left++;
+            right++;
+        }
+        if (gap == 1)
+            break;
+        gap = gap / 2 + gap % 2;
+    }
+}
+
+// 8.Zero sum subarray (find the number of subarrays in the array which has a sum of 0)
+// Time complexity:O(n)
+// space complexity:O(n)
+long long int findSubarray(vector<long long int> &arr, int n)
+{
+    // code here
+    unordered_map<long long int, long long int> mp;
+    mp[0] = 1;
+    int sum = 0, ans = 0;
+    for (int i = 0; i < arr.size(); i++)
+    {
+        sum += arr[i];
+        if (mp.find(sum) != mp.end())
+        {
+            ans += mp[sum];
+        }
+        mp[sum]++;
+    }
+    return ans;
+}
+
+// 9.Product array puzzle(In this question you have to form an array with every element representing the product of all the elements in the array except the current element)
+// If it is asked that you are not allowed to use the division operator than you can do this
+vector<long long int> productExceptSelf(vector<long long int> &nums, int n)
+{
+
+    // code here
+    long long int pro = 1;
+    for (int i = 0; i < nums.size(); i++)
+    {
+        pro *= nums[i];
+    }
+    vector<long long int> ans;
+    for (int i = 0; i < n; i++)
+    {
+        long long int temp = pro;
+        long long int count = 0;
+        while (temp != 0)
+        {
+            temp -= nums[i];
+            count++;
+        }
+        ans.push_back(count);
+    }
+    return ans;
+}
