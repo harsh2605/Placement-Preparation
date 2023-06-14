@@ -53,7 +53,7 @@ int findMin(vector<int> &nums)
 }
 
 // minimum in a rotated sorted array with duplicate elements;
-// Approach: In the previous question we have eliminated the left and right when they are greater than or less than but in this case we have the case of equal elements also therefore we cant element the full side when we encounter any equal element(ie:nums[mid]==nums[high])-->(lets take the case of 1 1 1 1 0 1 1 in this case if we have eleminated the whole right side when we see that 1==1 than we will miss 0 which is the lowest element therefore we will just shift the high value and make it high=high-1)
+// Approach: In the previous question we have eliminated the left and right when they are greater than or less than but in this case we have the case of equal elements also therefore we can't eliminate the full side when we encounter any equal element(ie:nums[mid]==nums[high])-->(lets take the case of 1 1 1 1 0 1 1 in this case if we have eliminated the whole right side when we see that 1==1 than we will miss 0 which is the lowest element therefore we will just shift the high value and make it high=high-1)
 // The time complexity will be O(N) for the case lets take [1,1,1,1,1,1,1];
 int findMin(vector<int> &nums)
 {

@@ -101,52 +101,49 @@ int main()
     return 0;
 }
 
-// with time complexity O(Nlogn) and space complexity O(1)(Have to complete using gap method)
-// Merge two sorted array with time complexity of (O(N*logN)) ans space complexity of(O(1))
+// with time complexity O((N+M)log(N+M)) and space complexity O(1)(Have to complete using gap method)
+// Merge two sorted array with time complexity of O((N+M)log(N+M)) ans space complexity of(O(1))
 //   (Here we uses gap algorithm to solve this problem where you can find the gap using formula(ceil((n1+n2)/2)) and linearly iterating over the elements present in both the arrays having a gap you have to perform the operation untill gap is>=1(if the gap element first >elemtn last than swap both the values)
-#include <bits/stdc++.h>
-using namespace std;
-#define ull unsigned long long
-#define ll long long
-void merge(vector<int> &vt1, vector<int> &vt2)
+void swaping(long long arr1[], long long arr2[], int ind1, int ind2)
 {
-    int i = 0;
-    int store = (ceil((vt1.size() + vt2.size()) / (float)2));
-    while (store != 0)
+    if (arr1[ind1] > arr2[ind2])
     {
-        int ele = store;
-        while (ele--)
-        {
-        }
+        swap(arr1[ind1], arr2[ind2]);
     }
 }
-int main()
+void merge(long long arr1[], long long arr2[], int n, int m)
 {
-    int n, m;
-    cin >> n >> m;
-    vector<int> vt1, vt2;
-    for (int i = 0; i < n; i++)
+    // code here
+    int len = n + m;
+    int gap = (len / 2) + (len % 2);
+    while (gap)
     {
-        int x;
-        cin >> x;
-        vt1.push_back(x);
+        int left = 0;
+        int right = left + gap;
+        while (right < len)
+        {
+            // arr1 and arr2
+            if (left < n && right >= n)
+            {
+                swaping(arr1, arr2, left, right - n);
+            }
+            // arr2 and arr2
+            else if (left >= n)
+            {
+                swaping(arr2, arr2, left - n, right - n);
+            }
+            // arr1 and arr1
+            else
+            {
+                swaping(arr1, arr1, left, right);
+            }
+            left++;
+            right++;
+        }
+        if (gap == 1)
+            break;
+        gap = (gap / 2) + (gap % 2);
     }
-    for (int i = 0; i < m; i++)
-    {
-        int x;
-        cin >> x;
-        vt2.push_back(x);
-    }
-    merge(vt1, vt2);
-    for (int i = 0; i < n; i++)
-    {
-        cout << vt1[i] << " ";
-    }
-    for (int i = 0; i < m; i++)
-    {
-        cout << vt2[i] << " ";
-    }
-    return 0;
 }
 
 // find duplcaite elements in O(1) Space complexity
@@ -172,6 +169,47 @@ vector<int> duplicates(int arr[], int n)
     if (ans.size() == 0)
         return {-1};
     return ans;
+}
+
+// find the duplicate element in O(1) time complexity without modifying the array
+// Here we use HARE AND THE TORTOISE APPROACH(slow and fast pointer)
+// Time complexity is : O(N)
+// Space complexity is : O(1)
+
+#include <bits/stdc++.h>
+using namespace std;
+#define ull unsigned long long
+#define ll long long
+int solve(vector<int> vt)
+{
+    int slow = vt[0];
+    int fast = vt[0];
+    do
+    {
+        slow = vt[slow];
+        fast = vt[vt[fast]];
+    } while (slow != fast);
+    fast = vt[0];
+    while (fast != slow)
+    {
+        slow = vt[slow];
+        fast = vt[vt[fast]];
+    }
+    return vt[fast];
+}
+int main()
+{
+    int n;
+    cin >> n;
+    vector<int> vt;
+    for (int i = 0; i < n; i++)
+    {
+        int x;
+        cin >> x;
+        vt.push_back(x);
+    }
+    cout << solve(vt);
+    return 0;
 }
 
 // 11.Rearrange the elements of the array in the way it is like Max_element,min_element,sec_max,sec_min element and so on.... input: 1 2 3 4 5 6 output:6 1 5 2 4 3
@@ -249,7 +287,7 @@ int longestConsecutive(vector<int> &nums)
     return ans;
 }
 
-// 14.Three way partioning of the array in this question we have to arrange the array in such a way such that the value of the first section of the array if less than the value of a in range [a,b] and the value greater than b lies in the last and the rest in the center of the array
+// 14.Three way partioning of the array in this question we have to arrange the array in such a way such that the value of the first section of the array is less than the value of a in range [a,b] and the value greater than b lies in the last and the rest in the center of the array
 // same as DNF algorithm
 void threeWayPartition(vector<int> &nums, int a, int b)
 {
@@ -297,7 +335,18 @@ int majorityElement(vector<int> &nums)
             count--;
         }
     }
+    count=0;
+    for(int i=0;i<nums.size();i++)
+    {
+        if(nums[i]==ele)
+        {
+            count++;
+        }
+    }
+    if(count>(nums.size()/2))
     return ele;
+    //if no element present in the array is present more than (n/2) times
+    return -1;
 }
 
 // 16.Arrange the array elements as negative and positive elements with Time complexity O(N*N) and space complexity O(1)
@@ -633,7 +682,7 @@ bool find3Numbers(int A[], int n, int X)
     return false;
 }
 
-// 26.Arraneg the array elements in alternating postive and negative elements without using any extra spaces
+// 26.Arrange the array elements in alternating postive and negative elements without using any extra spaces
 #include <bits/stdc++.h>
 using namespace std;
 #define ull unsigned long long

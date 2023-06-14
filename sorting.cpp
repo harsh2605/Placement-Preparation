@@ -307,7 +307,7 @@ long long int findSubarray(vector<long long int> &arr, int n)
 }
 
 // 9.Product array puzzle(In this question you have to form an array with every element representing the product of all the elements in the array except the current element)
-// If it is asked that you are not allowed to use the division operator than you can do this
+// If it is asked that you are not allowed to use the division operator than you can do this btut its time complexity is O(N^2)
 vector<long long int> productExceptSelf(vector<long long int> &nums, int n)
 {
 
@@ -330,4 +330,64 @@ vector<long long int> productExceptSelf(vector<long long int> &nums, int n)
         ans.push_back(count);
     }
     return ans;
+}
+
+// same question with time complexity as O(N) and space complexity as O(n) and without using division operator
+vector<int> productExceptSelf(vector<int> &nums)
+{
+    vector<int> left(nums.size() + 1, 0);
+    vector<int> right(nums.size() + 1, 0);
+    left[0] = 1;
+    right[nums.size()] = 1;
+    for (int i = 1; i < left.size(); i++)
+    {
+        left[i] = left[i - 1] * nums[i - 1];
+    }
+    for (int i = nums.size() - 1; i >= 0; i--)
+    {
+        right[i] = right[i + 1] * nums[i];
+    }
+    int k = 0;
+    for (int i = 1; i < left.size(); i++)
+    {
+        nums[k] = left[i - 1] * right[i];
+        k++;
+    }
+    return nums;
+}
+
+// If for the same question the space complexity is O(1) than
+public
+int[] productExceptSelf(int[] nums)
+{
+    int n = nums.length;
+    int ans[] = new int[n];
+    Arrays.fill(ans, 1);
+    int curr = 1;
+    for (int i = 0; i < n; i++)
+    {
+        ans[i] *= curr;
+        curr *= nums[i];
+    }
+    curr = 1;
+    for (int i = n - 1; i >= 0; i--)
+    {
+        ans[i] *= curr;
+        curr *= nums[i];
+    }
+    return ans;
+}
+
+// 10.sort by set bit count
+//you have to make sort the elements in such a way that the element having the greater number of set bit comes first and the number having similar set bits will have the first preference
+static int comparator(int a, int b)
+{
+    if (__builtin_popcount(a) > __builtin_popcount(b))
+        return true;
+    return false;
+}
+void sortBySetBitCount(int arr[], int n)
+{
+    // Your code goes here
+    stable_sort(arr, arr + n, comparator);
 }
