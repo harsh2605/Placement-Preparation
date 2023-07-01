@@ -1,0 +1,46 @@
+-> To set the value of any attribute as primary key (
+example:create table emloyee(
+employee_id number,
+primary key(employee_id));
+
+->And if want to set the foreign key than the syntax will be 
+example: create table department(
+foreign key(department_id) references employee(employee_id));
+
+-> create table department_info as select * from department where 1=0;//This 1=0 will always return a false value 
+so no rows will be added to the department_info table only the structure will be added;
+
+->Want to rename the name of the column:
+Syntax: alter table employee rename column contact_no to phone_no;
+
+->Want to modify the data type of any particular attriubute
+syntax : alter table employee modify employee_id number(10);
+
+->Want to add referential integrity constraint to any of the column
+syntax : alter table courier add constraint fk6(yaha par kuch v name ho sakta hai) foreign key(branch_id) references branch(branch_id);
+
+->Want to add NOT NULL to any predefined data type column
+alter table courier modify branch_id number(10) NOT NULL;
+
+->Want to add unique constraint to the column:
+alter table employee add constraint un_email unique(email);
+
+->Want to add check constraint of having the numbers in the mobile number between [0-9]
+alter table employee add constraint CHK_CONTACT check(Contact_no like '[0-9] yhi aur 9 times likhna hai [0-9]');
+
+->Want to add and remove column from the table:
+alter table employee
+add branch_name varchar2(25) NOT NULL;
+alter table employee
+drop column contact_no;
+
+->Want to drop a table using cascading constraint(cascading constraint kya karta hai ki referential integrity hai jo agar do tables connected hai suppose ek hai order having the primary key and other is order_item having the foreign key
+agar order deleted hota hai to with the use of cascading constraint the order_items which are releated to the order will also be deleted
+
+Syntax: drop table courier cascade contraint;
+
+->Want to remove all the data from the table without effecting the whole structure of the table use truncate 
+Syntax: truncate table employee;
+
+->Want to remove the data as well as the structure of the whole table with having cascade constraint
+Syntax:drop table employee cascade contraint;
