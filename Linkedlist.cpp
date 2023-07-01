@@ -43,8 +43,8 @@ ListNode *addTwoNumbers(ListNode *l1, ListNode *l2)
     return temp->next;
 }
 
-// Add two numbers without reversring the list
-// In this case we will use two stack one stack will store the elemets of the first list and other stack store the elements of the second list and then traverse through the stack to get the elements and add the elements and form a newnode and just connect the nodes
+// Add two numbers without reversing the list
+// In this case we will use two stack one stack will store the elements of the first list and other stack store the elements of the second list and then traverse through the stack to get the elements and add the elements and form a newnode and just connect the nodes
 ListNode *addTwoNumbers(ListNode *l1, ListNode *l2)
 {
     stack<int> s1, s2, s3;

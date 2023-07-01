@@ -374,24 +374,19 @@ int minSpeedOnTime(vector<int> &dist, double hour)
 int findKthPositive(vector<int> &arr, int k)
 {
     int low = 0, high = arr.size() - 1;
-    if (arr[arr.size() - 1] - (arr.size()) == 0)
-        return arr.size() + k;
-    while (low <= high)
+    while (low < high)
     {
-        int mid = (low + high) / 2;
-        int ele = arr[mid] - (mid + 1);
-        if (ele < k)
-        {
-            low = mid + 1;
+        int mid = (low + high) >> 1;
+        if (arr[mid] - (mid + 1) >= k)
+        { 
+            high = mid;
         }
         else
         {
-            high = mid - 1;
+            low = mid + 1;
         }
     }
-    if (high == -1)
-        return k;
-    return arr[high] + (k - (arr[high] - (high + 1)));
+    return low + k;
 }
 
 // Find median in sorted matrix by row wise having only odd number of elements present in the matrix
