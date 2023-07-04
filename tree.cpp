@@ -482,7 +482,7 @@ bool isSymmetric(TreeNode *root)
 }
 
 // Print path from root to node in a given binary tree
-//Tc:O(N) SC:O(H)
+// Tc:O(N) SC:O(H)
 bool solve(TreeNode *root, vector<int> &ans, int node)
 {
     if (root == NULL)
@@ -502,4 +502,111 @@ vector<int> solution(TreeNode *root, int node)
         return ans;
     solve(root, ans, node);
     return ans;
+}
+
+// Lowest common ancestor
+// First approach is to find the path from the root node to the node which is given in the question and similarly find the path of the second path with the same process and traverse through both the arrays and find the last element which is equal in both the array form the starting
+// Another approach without extra space is using recursion
+TreeNode *lowestCommonAncestor(TreeNode *root, TreeNode *p, TreeNode *q)
+{
+    if (root == NULL || root == p || root == q)
+        return root;
+    TreeNode *left = lowestCommonAncestor(root->left, p, q);
+    TreeNode *right = lowestCommonAncestor(root->right, p, q);
+    if (left == NULL)
+        return right;
+    else if (right == NULL)
+        return left;
+    else // if both left and right are not null than we get our final result
+        return root;
+}
+
+// The follow up to this question is that it is asked that if some node from p and q is not present than you have to return NULL;
+{The answer of the following question is that when you are returning the root in the last you can maintain a flag variable which will become true and justify that from both the sides nodes are coming}
+
+// One more follow up question to lowest common ancestor is that when in the structure what if the it contain parent node also means it is given the pointer to the nodes parent
+{
+    This question will become similar to the linkedlist question where we have to fin dthe intersection point of the Y shaped linkedlist
+}
+/*
+// Definition for a Node.
+class Node {
+public:
+    int val;
+    Node* left;
+    Node* right;
+    Node* parent;
+};
+*/
+class Solution
+{
+public:
+    Node *lowestCommonAncestor(Node *p, Node *q)
+    {
+        Node *a = p, *b = q;
+        while (a != b)
+        {
+            a = (a == nullptr ? q : a->parent);
+            b = (b == nullptr ? p : b->parent);
+        }
+        return a;
+    }
+};
+
+// Similarly if more than two nodes are present in a vector whose common ancesto is to be found out
+TreeNode *lowestCommonAncestor(TreeNode *root, const set<TreeNode *> &nodes_set)
+{
+    if (root == NULL || nodes_set.count(root) > 0) // just you have to check if the current root node is present in the set or not
+    {
+        return root;
+    }
+    TreeNode *l = lowestCommonAncestor(root->left, nodes_set);
+    TreeNode *r = lowestCommonAncestor(root->right, nodes_set);
+
+    if (l == NULL)
+        return r;
+    else if (r == NULL)
+        return l;
+    else
+        return root;
+}
+
+public:
+TreeNode *lowestCommonAncestor(TreeNode *root, vector<TreeNode *> &nodes)
+{
+    set<TreeNode *> nodes_set(nodes.begin(), nodes.end());
+    return lowestCommonAncestor(root, nodes_set);
+}
+
+// child sum property of binary tree(in this question you have to make the tree with increment only in such a way that the parent node is equal to the sum of nodes in the left and right side)
+// The basic idea of the question is ki data ka shortage nhi hone dena hai jaise jaise niche ja rhe ho waise waise data increase karna hai fir returning time adjust kar lengai kyuki yaha par humlog sirf increment kar sakte hai isliye
+void solve(TreeNode *root)
+{
+    if (root == NULL)
+        return;
+    int cur = 0;
+    if (root->left)
+        cur += root->left->val;
+    if (root->right)
+        cur += root->right->val;
+    if (root->data <= cur)
+    {
+        root->data = cur;
+    }
+    else
+    {
+        if (root->left)
+            root->left->data = cur;
+        if (root->right)
+            root->right->data = cur;
+    }
+    solve(root->left);
+    solve(root->right);
+    int temp = 0;
+    if (root->left)
+        temp += root->left->data;
+    if (root->right)
+        temp += root->right->data;
+    if (root->left || root->right)
+        root->data = temp;
 }
