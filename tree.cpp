@@ -326,3 +326,180 @@ vector<int> boundary(Node *root)
     right(root, ans);
     return ans;
 }
+
+// Vertical order traversal of a tree(TC:O(NLOGN) SC:O(N))
+vector<vector<int>> verticalTraversal(TreeNode *root)
+{
+    vector<vector<int>> ans;
+    queue<pair<TreeNode *, pair<int, int>>> q; //{value,{level,vertical}};
+    map<int, map<int, multiset<int>>> mp;      //(vertical,{level,ele});
+    q.push({root, {0, 0}});
+    while (!q.empty())
+    {
+        auto temp = q.front();
+        q.pop();
+        root = temp.first;
+        mp[temp.second.second][temp.second.first].insert(root->val);
+        if (root->left != NULL)
+        {
+            q.push({root->left, {temp.second.first + 1, temp.second.second - 1}});
+        }
+        if (root->right != NULL)
+        {
+            q.push({root->right, {temp.second.first + 1, temp.second.second + 1}});
+        }
+    }
+    for (auto itr : mp)
+    {
+        vector<int> col;
+        for (auto mtr : itr.second)
+        {
+            col.insert(col.end(), mtr.second.begin(), mtr.second.end());
+        }
+        ans.push_back(col);
+    }
+    return ans;
+}
+
+// In top view and bottom view questions we can't use recursive traversal it will give wrong results
+//  top view of a binary tree
+vector<int> topView(Node *root)
+{
+    // Your code here
+    queue<pair<Node *, int>> q; // storing (node,vertical)
+    q.push({root, 0});
+    map<int, int> mp;
+    while (!q.empty())
+    {
+        auto temp = q.front();
+        q.pop();
+        if (mp.find(temp.second) == mp.end())
+            mp[temp.second] = temp.first->data;
+        if (temp.first->left != NULL)
+        {
+            q.push({temp.first->left, temp.second - 1});
+        }
+        if (temp.first->right != NULL)
+        {
+            q.push({temp.first->right, temp.second + 1});
+        }
+    }
+    vector<int> ans;
+    for (auto itr : mp)
+    {
+        ans.push_back(itr.second);
+    }
+    return ans;
+}
+
+// bottom view of binary tree
+vector<int> bottomView(Node *root)
+{
+    // Your Code Here
+    queue<pair<Node *, int>> q; // storing (node,vertical)
+    q.push({root, 0});
+    map<int, int> mp;
+    while (!q.empty())
+    {
+        auto temp = q.front();
+        q.pop();
+        mp[temp.second] = temp.first->data;
+        if (temp.first->left != NULL)
+        {
+            q.push({temp.first->left, temp.second - 1});
+        }
+        if (temp.first->right != NULL)
+        {
+            q.push({temp.first->right, temp.second + 1});
+        }
+    }
+    vector<int> ans;
+    for (auto itr : mp)
+    {
+        ans.push_back(itr.second);
+    }
+    return ans;
+}
+
+// Rigth side view of a binary tree similar code can be written for the left side view of the binary tree starting from(root left and right in the recursion call)
+void solve(TreeNode *root, vector<int> &ans, int level)
+{
+    if (root == NULL)
+        return;
+    if (ans.size() == level)
+        ans.push_back(root->val);
+    solve(root->right, ans, level + 1);
+    solve(root->left, ans, level + 1);
+}
+vector<int> rightSideView(TreeNode *root)
+{
+    vector<int> ans;
+    if (root == NULL)
+        return ans;
+    solve(root, ans, 0);
+    return ans;
+}
+
+// Check if the tree is symmetric or not (same question as checking of two trees are same or not)
+// TC:(O(N)) and SC:O(N)
+bool solve(TreeNode *le, TreeNode *rig)
+{
+    if (le == NULL || rig == NULL)
+        return (le == rig);
+    return (le->val == rig->val) && solve(le->left, rig->right) && solve(le->right, rig->left);
+}
+bool isSymmetric(TreeNode *root)
+{
+    return solve(root->left, root->right);
+}
+// same question if you want to do this iteratively
+bool isSymmetric(TreeNode *root)
+{
+    if (root == NULL)
+        return true;
+    queue<TreeNode *> q1, q2;
+    TreeNode *l, *r;
+    q1.push(root->left);
+    q2.push(root->right);
+    while (!q1.empty() && !q2.empty())
+    {
+        l = q1.front();
+        r = q2.front();
+        q1.pop();
+        q2.pop();
+        if (l == NULL && r == NULL)
+            continue;
+        if (l == NULL || r == NULL)
+            return false;
+        if (l->val != r->val)
+            return false;
+        q1.push(l->left);
+        q1.push(l->right);
+        q2.push(r->right);
+        q2.push(r->left);
+    }
+    return true;
+}
+
+// Print path from root to node in a given binary tree
+//Tc:O(N) SC:O(H)
+bool solve(TreeNode *root, vector<int> &ans, int node)
+{
+    if (root == NULL)
+        return false;
+    ans.push_back(root->val);
+    if (root->val == node)
+        return true;
+    if (solve(root->left, ans, node) || solve(root->right, ans, node))
+        return true;
+    ans.pop_back();
+    return false;
+}
+vector<int> solution(TreeNode *root, int node)
+{
+    vector<int> ans;
+    if (root == NULL)
+        return ans;
+    solve(root, ans, node);
+    return ans;
+}
