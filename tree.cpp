@@ -610,3 +610,350 @@ void solve(TreeNode *root)
     if (root->left || root->right)
         root->data = temp;
 }
+
+// Elements at a distance k from the given node
+void parent_find(Node *root, unordered_map<Node *, Node *> &parent)
+{
+    queue<Node *> q;
+    q.push(root);
+    while (!q.empty())
+    {
+        Node *ele = q.front();
+        q.pop();
+        if (ele->left != NULL)
+        {
+            parent[ele->left] = ele;
+            q.push(ele->left);
+        }
+        if (ele->right != NULL)
+        {
+            parent[ele->right] = ele;
+            q.push(ele->right);
+        }
+    }
+}
+void new_func(Node *root, Node *el, int k, set<Node *> ans)
+{
+    unordered_map<Node *, Node *> parent;
+    parent_find(root, parent);
+    unordered_map<Node *, bool> visited;
+    int distance = 0;
+    queue<Node *> qu;
+    qu.push(el);
+    while (!qu.empty())
+    {
+        int size = qu.size();
+        if (distance == k)
+            break;
+        distance++;
+        for (int i = 0; i < size; i++)
+        {
+            Node *ele = qu.front();
+            qu.pop();
+            if (ele->left && !visited[ele->left])
+            {
+                qu.push(ele->left);
+                visited[ele->left] = true;
+            }
+            if (ele->right && !visited[ele->right])
+            {
+                qu.push(ele->right);
+                visited[ele->right] = true;
+            }
+            if (parent[ele] && !visited[parent[ele]])
+            {
+                qu.push(parent[ele]);
+                visited[parent[ele]] = true;
+            }
+        }
+    }
+    return qu.size();
+}
+
+// Minimum time to burn a tree(This question is same as finding the nodes at a distance k from the target node)
+// In the solution we have taken fl=0 than updating that only if fl=1 because their might be the case that the nodes are burnt and again they are asked to be burnt so it wil increase the count.
+class Solution
+{
+public:
+    Node *target = NULL;
+    void makeparent(Node *root, unordered_map<Node *, Node *> &parent)
+    {
+        queue<Node *> q;
+        q.push(root);
+        while (!q.empty())
+        {
+            Node *curr = q.front();
+            q.pop();
+            if (curr->left)
+            {
+                q.push(curr->left);
+                parent[curr->left] = curr;
+            }
+            if (curr->right)
+
+            {
+                q.push(curr->right);
+                parent[curr->right] = curr;
+            }
+        }
+    }
+    void findtarget(Node *root, int tar)
+    {
+        if (root == NULL)
+            return;
+        if (root->data == tar)
+        {
+            target = root;
+        }
+        findtarget(root->left, tar);
+        findtarget(root->right, tar);
+        return;
+    }
+    int minTime(Node *root, int tar)
+    {
+        // Your code goes here
+        findtarget(root, tar);
+        // cout<<target->data<<endl;
+        int ans = 0;
+        queue<Node *> q;
+        unordered_map<Node *, Node *> parent;
+        unordered_map<Node *, bool> vis;
+        makeparent(root, parent);
+        q.push(target);
+        vis[target] = true;
+        while (!q.empty())
+        {
+            int fl = 0;
+            int size = q.size();
+            for (int i = 0; i < size; i++)
+            {
+
+                Node *curr = q.front();
+                q.pop();
+                if (curr->left && !vis[curr->left])
+                {
+                    fl = 1;
+                    q.push(curr->left);
+                    vis[curr->left] = true;
+                }
+                if (curr->right && !vis[curr->right])
+                {
+                    fl = 1;
+                    q.push(curr->right);
+                    vis[curr->right] = true;
+                }
+                if (parent[curr] && !vis[parent[curr]])
+                {
+                    fl = 1;
+                    q.push(parent[curr]);
+                    vis[parent[curr]] = true;
+                }
+            }
+            if (fl)
+                ans++;
+        }
+        return ans;
+    }
+};
+
+// Count complete tree nodes(A complete tree means having either all the nodes filled or nodes at the last level is not necessary to be filled if filled they are filled and aligned to the left side)
+// Time complexity:O(logN)^2 and space complexity:O(logN)
+class Solution
+{
+public:
+    int countNodes(TreeNode *root)
+    {
+        if (root == NULL)
+            return 0;
+        int lh = find_height_left(root);
+        int rh = find_height_right(root);
+        if (lh == rh)
+            return (1 << lh) - 1; //(2^h-1)
+        return 1 + countNodes(root->left) + countNodes(root->right);
+    }
+    int find_height_left(TreeNode *root)
+    {
+        int count = 0;
+        while (root != NULL)
+        {
+            count++;
+            root = root->left;
+        }
+        return count;
+    }
+    int find_height_right(TreeNode *root)
+    {
+        int count = 0;
+        while (root != NULL)
+        {
+            count++;
+            root = root->right;
+        }
+        return count;
+    }
+};
+
+// Flatten binary tree to linkedlist
+// Solution using recursion
+class Solution
+{
+public:
+    TreeNode *prev = NULL;
+    void flatten(TreeNode *root)
+    {
+        if (root == NULL)
+            return;
+        flatten(root->right);
+        flatten(root->left);
+        root->right = prev;
+        root->left = NULL;
+        prev = root;
+    }
+};
+
+// Solution using stack
+void flatten(TreeNode *root)
+{
+    stack<TreeNode *> st;
+    st.push(root);
+    while (!st.empty())
+    {
+        TreeNode *cur = st.top();
+        st.pop();
+        if (cur->left != NULL)
+        {
+            st.push(cur->left);
+        }
+        if (cur->right != NULL)
+        {
+            st.push(cur->right);
+        }
+        if (!st.empty())
+        {
+            cur->right = st.top();
+        }
+        cur->left = NULL;
+    }
+}
+
+// Binary Search Tree
+// Search in a binary search tree
+// Time complexity:O(Logn)
+// Space complexity:O(H);//H is the height of the binary search tree
+TreeNode *search(TreeNode *root, int val)
+{
+    while (root != NULL && root->val != val)
+    {
+        root = root->val < val ? root->right : root->left;
+    }
+    return root;
+}
+
+// ceil and floor of binary search tree
+int findCeil(Node *root, int input)
+{
+
+    int ceil = -1;
+    while (root != NULL)
+    {
+        if (root->data == input)
+        {
+            ceil = root->data;
+            return ceil;
+        }
+        else if (root->data < input)
+        {
+            root = root->right;
+        }
+        else
+        {
+            ceil = root->data;
+            root = root->left;
+        }
+    }
+    return ceil;
+}
+
+int floor(Node *root, int x)
+{
+    // Code here
+    int flor = -1;
+    while (root != NULL)
+    {
+        if (root->data == x)
+        {
+            flor = x;
+            return flor;
+        }
+        else if (root->data > x)
+        {
+            root = root->left;
+        }
+        else
+        {
+            flor = root->data;
+            root = root->right;
+        }
+    }
+    return flor;
+}
+
+// Insert into binary search tree
+// Time complexity:O(logn)
+TreeNode *insertIntoBST(TreeNode *root, int val)
+{
+    TreeNode *store = root;
+    if (root == NULL)
+    {
+        return new TreeNode(val);
+    }
+    while (true)
+    {
+        if (root->val <= val)
+        {
+            if (root->right != NULL)
+            {
+                root = root->right;
+            }
+            else
+            {
+                root->right = new TreeNode(val);
+                break;
+            }
+        }
+        else
+        {
+            if (root->left != NULL)
+            {
+                root = root->left;
+            }
+            else
+            {
+                root->left = new TreeNode(val);
+                break;
+            }
+        }
+    }
+    return store;
+}
+
+// Kth smallest element in a binary search tree
+// Solution:{Binary search tree has a property that if you make a inorder traversal than the elements will be sorted than you can find the kth largest and kth smallest element}
+// for the kth largest element you just have to count the number of nodes present in the binary tree and than you have to find the element at N-k positon while doing the inorder traversal
+
+// Validate binary search tree(Check whether a given tree is binary search tree or binary tree)
+// Solution:This question is also done using the inorder traversal and checking if the previous element is greater than the current element than it is not a valid BST otherwise it is a BST
+
+// LCA in Binary search tree
+// Time complexity:O(H)
+// Space complexity:O(1) without using stack space
+TreeNode *lowestCommonAncestor(TreeNode *root, TreeNode *p, TreeNode *q)
+{
+    if (root == NULL)
+        return NULL;
+    if (root->val < p->val && root->val < q->val)
+        return lowestCommonAncestor(root->right, p, q);
+    if (root->val > p->val && root->val > q->val)
+        return lowestCommonAncestor(root->left, p, q);
+    return root;
+}
