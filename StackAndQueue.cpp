@@ -532,3 +532,110 @@ int trap(vector<int> &height)
     }
     return ans;
 }
+
+// Largest rectangle on histogram
+void solve(vector<int> &dup, vector<int> &vt)
+{
+    int n = dup.size() - 1;
+    stack<pair<int, int>> st; // it will store the next smaller element with its index;
+    for (int i = dup.size() - 1; i >= 0; i--)
+    {
+        if (st.empty())
+        {
+            vt.push_back(n - i);
+        }
+        else
+        {
+            while (!st.empty() && st.top().first >= dup[i])
+            {
+                st.pop();
+            }
+            if (st.empty())
+                vt.push_back(n - i);
+            else
+                vt.push_back(st.top().second - 1 - i);
+        }
+        st.push({dup[i], i});
+    }
+}
+int largestRectangleArea(vector<int> &heights)
+{
+    vector<int> dup = heights;
+    vector<int> right, left;
+    solve(dup, right);
+    reverse(dup.begin(), dup.end());
+    solve(dup, left);
+    reverse(right.begin(), right.end());
+    int maxi = INT_MIN;
+    for (int i = 0; i < heights.size(); i++)
+    {
+        maxi = max(maxi, heights[i] * (left[i] + right[i] + 1));
+    }
+    return maxi;
+}
+
+// Maximal area of rectangle in a grid ;
+// The approach will be you have to iterate over every row and add the value of its block in the next row if the next row bloack value is not 0;
+// By doing this a new values of every row is created and than on every row apply to concept of finding maximum area in a histogram and in this way you can find the maximum area;
+class Solution
+{
+public:
+    void solve(vector<int> &dup, vector<int> &vt)
+    {
+        int n = dup.size() - 1;
+        stack<pair<int, int>> st; // it will store the next smaller element with its index;
+        for (int i = dup.size() - 1; i >= 0; i--)
+        {
+            if (st.empty())
+            {
+                vt.push_back(n - i);
+            }
+            else
+            {
+                while (!st.empty() && st.top().first >= dup[i])
+                {
+                    st.pop();
+                }
+                if (st.empty())
+                    vt.push_back(n - i);
+                else
+                    vt.push_back(st.top().second - 1 - i);
+            }
+            st.push({dup[i], i});
+        }
+    }
+    int largest(vector<int> &heights)
+    {
+        vector<int> dup = heights;
+        vector<int> right, left;
+        solve(dup, right);
+        reverse(dup.begin(), dup.end());
+        solve(dup, left);
+        reverse(right.begin(), right.end());
+        int maxi = INT_MIN;
+        for (int i = 0; i < heights.size(); i++)
+        {
+            maxi = max(maxi, heights[i] * (left[i] + right[i] + 1));
+        }
+        return maxi;
+    }
+    int maximalRectangle(vector<vector<char>> &matrix)
+    {
+        int n = matrix.size();
+        int m = matrix[0].size();
+        vector<int> vt(m, 0);
+        int maxi = INT_MIN;
+        // maxi=max(maxi,largest(store));
+        for (int i = 0; i < n; i++)
+        {
+            for (int j = 0; j < m; j++)
+            {
+                if (matrix[i][j] == '1')
+                    vt[j] += '1' - '0';
+                else
+                    vt[j] = 0;
+            }
+            maxi = max(maxi, largest(vt));
+        }
+        return maxi;
+    }
