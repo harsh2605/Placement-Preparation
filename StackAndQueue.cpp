@@ -639,3 +639,344 @@ public:
         }
         return maxi;
     }
+}
+
+// Remove K digits from a given string to reduce the value of the given string
+string
+removeKdigits(string num, int k)
+{
+    stack<char> st;
+    string ans;
+    int count = 0;
+    for (int i = 0; i < num.size(); i++)
+    {
+        while (!st.empty() && count < k && st.top() > num[i])
+        {
+            count++;
+            st.pop();
+        }
+        st.push(num[i]);
+    }
+    while (count != k)
+    {
+        st.pop();
+        count++;
+    }
+    while (!st.empty())
+    {
+        ans += st.top();
+        st.pop();
+    }
+    reverse(ans.begin(), ans.end());
+    string res;
+    bool flag = false;
+    for (int i = 0; i < ans.size(); i++)
+    {
+        if (ans[i] != '0')
+        {
+            flag = true;
+        }
+        if (flag == true)
+        {
+            res += ans[i];
+        }
+    }
+    return res.size() == 0 ? "0" : res;
+}
+
+// LRU Cache(Least recently used)
+// Our approach will be creating a doubly linkedlist of head and tail nodes and both are connected to each other
+// If suppose someone call the get method and the value of the get is already present in the hash map then the value will be updated and the node will come to the front behind the head node and the previous node will be deleted from its position;
+// You have to make a head and a tail nodes and act accordingy and if koi node ko nikalna ho to wo humesa tail side se niklega and dalna hai to humesa head side se dalega
+struct ListNode
+{
+    int key;
+    int val;
+    ListNode *next;
+    ListNode *prev;
+    ListNode(int key, int val)
+    {
+        this->key = key;
+        this->val = val;
+    }
+};
+unordered_map<int, ListNode *> mp;
+ListNode *head = new ListNode(-1, -1);
+ListNode *tail = new ListNode(-1, -1);
+int cap;
+void delete_node(ListNode *cur)
+{
+    ListNode *temp = cur->next;
+    cur->prev->next = temp;
+    temp->prev = cur->prev;
+}
+void add_node(ListNode *cur)
+{
+    ListNode *temp = head->next;
+    cur->next = temp;
+    head->next = cur;
+    cur->prev = head;
+    temp->prev = cur;
+}
+LRUCache(int capacity)
+{
+    cap = capacity;
+    head->next = tail;
+    tail->prev = head;
+}
+
+int get(int key)
+{
+    if (mp.find(key) != mp.end())
+    {
+        ListNode *store = mp[key];
+        int value = store->val;
+        mp.erase(key);
+        delete_node(store);
+        add_node(store);
+        mp[key] = head->next;
+        return value;
+    }
+    return -1;
+}
+
+void put(int key, int value)
+{
+    if (mp.find(key) != mp.end())
+    {
+        ListNode *store = mp[key];
+        mp.erase(key);
+        delete_node(store);
+    }
+    if (mp.size() == cap)
+    {
+        mp.erase(tail->prev->key);
+        delete_node(tail->prev);
+    }
+    add_node(new ListNode(key, value));
+    mp[key] = head->next;
+}
+
+// Sliding window maximum using deque;
+// In this you hava to find the maximum element in every subarray of size K;
+// Time complexity:O(N)+O(N)
+// Space complexity:O(K)
+vector<int> maxSlidingWindow(vector<int> &nums, int k)
+{
+    deque<int> dq;
+    vector<int> ans;
+    for (int i = 0; i < nums.size(); i++)
+    {
+        if (!dq.empty() && dq.front() == i - k)
+        {
+            dq.pop_front();
+        }
+        while (!dq.empty() && nums[dq.back()] <= nums[i])
+        {
+            dq.pop_back();
+        }
+        dq.push_back(i);
+        if (i >= k - 1)
+            ans.push_back(nums[dq.front()]);
+    }
+    return ans;
+}
+
+// Celebrity problem
+// In this question you have to find the man who is known buy everybody but he doesnot know anyone
+// You are given a matrix than also you have to give a solution with O(N) time complexity
+// 1.First step is to put all the persons which means the row number in a stack ;
+// 2.Than take out two elements from the stack and find that if a knows b if yes than push b and b knows a than push a(ye kaise pata chalega ki a knows b ki nhi is that yoyu have to go to M[a][b] and check if the value is 1 or not);
+// 3.we have to do this untill the size of the stack become 1;
+// 4.Than after stack size become 1 than we have to take out the top element and check the row of that element that all the row value should be 0 and all the column value of the stack top row number should be 1 except the diagonal element than if both the condition of the row and column are true than we have our celebrity with us;
+
+int celebrity(vector<vector<int>> &M, int n)
+{
+    // code here
+    stack<int> st;
+    int a, b;
+    for (int i = 0; i < M.size(); i++)
+    {
+        st.push(i);
+    }
+    while (st.size() != 1)
+    {
+        a = st.top();
+        st.pop();
+        b = st.top();
+        st.pop();
+        if (M[b][a] == 0)
+        {
+            st.push(b);
+        }
+        else
+        {
+            st.push(a);
+        }
+    }
+    int i = 0;
+    while (i < n)
+    {
+        if (M[st.top()][i] == 0)
+        {
+            i++;
+        }
+        else
+        {
+            return -1;
+        }
+    }
+    int j = 0;
+    while (j < n)
+    {
+        if (st.top() == j)
+        {
+            ;
+        }
+        else
+        {
+            if (M[j][st.top()] == 0)
+                return -1;
+        }
+        j++;
+    }
+    return st.top();
+}
+
+// Reverse first k elements of a queue;
+void solve(queue<int> &q, int count, int k)
+{
+    if (count == k)
+        return;
+    int ele = q.front();
+    q.pop();
+    solve(q, count + 1, k);
+    q.push(ele);
+}
+queue<int> modifyQueue(queue<int> q, int k)
+{
+    // add code here.
+    int final_count = q.size() - k;
+    int count = 0;
+    solve(q, count, k);
+    while (final_count != 0)
+    {
+        q.push(q.front());
+        q.pop();
+        final_count--;
+    }
+    return q;
+}
+
+// Find non-repeating character in a stream
+// In this question we will be given elements in a stream and then we have to output the element which are non repeating from the starting
+string FirstNonRepeating(string A)
+{
+    // Code here
+    string ans;
+    unordered_map<char, int> mp;
+    queue<char> q;
+    for (int i = 0; i < A.size(); i++)
+    {
+        mp[A[i]]++;
+        q.push(A[i]);
+        while (!q.empty())
+        {
+            if (mp[q.front()] > 1)
+            {
+                q.pop();
+            }
+            else
+            {
+                ans.push_back(q.front());
+                break;
+            }
+        }
+        if (q.empty())
+        {
+            ans.push_back('#');
+        }
+    }
+    return ans;
+}
+
+// Remove middle element from the stack using recursion
+void solve(stack<int> &st, int size, int count)
+{
+    if (count == size / 2)
+    {
+        st.pop();
+        return;
+    }
+    int ele = st.top();
+    st.pop();
+    solve(st, size, count + 1);
+    st.push(ele);
+}
+void deleteMid(stack<int> &s, int sizeOfStack)
+{
+    // code here..
+    int count = 0;
+    solve(s, s.size(), count);
+}
+
+// Reverse a stack using recursion
+// Time complexity:O(N^2);
+void insert_bottom(int ele, stack<int> &st)
+{
+    if (st.size() == 0)
+    {
+        st.push(ele);
+        return;
+    }
+    int eler = st.top();
+    st.pop();
+    insert_bottom(ele, st);
+    st.push(eler);
+    return;
+}
+void solve(stack<int> &st, int count)
+{
+    if (st.size() == 1)
+    {
+        return;
+    }
+    int ele = st.top();
+    st.pop();
+    solve(st, count + 1);
+    insert_bottom(ele, st);
+    return;
+}
+void Reverse(stack<int> &St)
+{
+    int count = 0;
+    solve(St, count);
+}
+
+// Longest valid parenthesis
+// input:((()))())() output:8
+int findMaxLen(string s)
+{
+    // code here
+    stack<int> st;
+    st.push(-1);
+    int ans = INT_MIN;
+    for (int i = 0; i < s.size(); i++)
+    {
+        if (s[i] == '(')
+        {
+            st.push(i);
+        }
+        else
+        {
+            st.pop();
+            if (st.size() == 0)
+            {
+                st.push(i);
+            }
+            else
+                ans = max(ans, i - st.top());
+        }
+    }
+    return ans == INT_MIN ? 0 : ans;
+}
