@@ -139,7 +139,7 @@ void push(int x)
 
 // Second approach is also using 2 stack
 // using input and output stack
-// 1.push opeartion push the element in the stack 1
+// 1.push opeartion push the element in the input stack
 // 2.pop operation : if the output stack is empty than push all the elements from the input stack into output stack and return the top element
 // 3.top operation : if the output stack is empty than push all the elements from the input stack into output stack and return the top element
 
@@ -392,25 +392,17 @@ vector<int> nextGreaterElement(vector<int> &nums1, vector<int> &nums2)
     stack<int> st;
     for (int i = nums2.size() - 1; i >= 0; i--)
     {
-        if (st.empty())
+        while (!st.empty() && st.top() < nums2[i])
         {
-            mp[nums2[i]] = -1;
-            st.push(nums2[i]);
+            st.pop();
+        }
+        if (!st.empty())
+        {
+            mp[nums2[i]] = st.top();
         }
         else
-        {
-            while (!st.empty() && st.top() < nums2[i])
-            {
-                st.pop();
-            }
-            if (!st.empty())
-            {
-                mp[nums2[i]] = st.top();
-            }
-            else
-                mp[nums2[i]] = -1;
-            st.push(nums2[i]);
-        }
+            mp[nums2[i]] = -1;
+        st.push(nums2[i]);
     }
     vector<int> ans;
     for (int i = 0; i < nums1.size(); i++)
