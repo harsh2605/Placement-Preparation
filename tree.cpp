@@ -121,7 +121,7 @@ vector<int> postorderTraversal(TreeNode *root)
     return ans;
 }
 
-// Inorder preorder and postorder data in one traversal using a single stack
+// Inorder,preorder and postorder data in one traversal using a single stack
 void solve(TreeNode *root)
 {
     stack<pair<TreeNode *, int>> st;
@@ -362,6 +362,7 @@ vector<vector<int>> verticalTraversal(TreeNode *root)
 }
 
 // In top view and bottom view questions we can't use recursive traversal it will give wrong results
+//Because if you perform any traversal on this tree it will get the wrong node first
 //  top view of a binary tree
 vector<int> topView(Node *root)
 {
@@ -452,6 +453,7 @@ bool isSymmetric(TreeNode *root)
 {
     return solve(root->left, root->right);
 }
+
 // same question if you want to do this iteratively
 bool isSymmetric(TreeNode *root)
 {
@@ -526,7 +528,7 @@ TreeNode *lowestCommonAncestor(TreeNode *root, TreeNode *p, TreeNode *q)
 
 // One more follow up question to lowest common ancestor is that when in the structure what if the it contain parent node also means it is given the pointer to the nodes parent
 {
-    This question will become similar to the linkedlist question where we have to fin dthe intersection point of the Y shaped linkedlist
+    This question will become similar to the linkedlist question where we have to find the intersection point of the Y shaped linkedlist
 }
 /*
 // Definition for a Node.

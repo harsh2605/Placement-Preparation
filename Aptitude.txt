@@ -1,0 +1,7 @@
+Number System:
+1.Find the unit digit 
+concept:0,1,5,6 iska kitna v power ho always yhi digit rhege
+baki sabka 4 se divide karke remainder nikalo and jo number ka last digit hai uska power karo remainder se and uska unit digit will be the answer;
+
+2.if a number divided by another number what is the remainder
+usme v uppar wale number ka unit didgit nikalna hai and suppose 8/10 hoga to answer 8 hoga and 8/5 hoga to answer 3 hoga

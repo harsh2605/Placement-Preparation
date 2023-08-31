@@ -115,7 +115,7 @@ void merge(long long arr1[], long long arr2[], int n, int m)
 {
     // code here
     int len = n + m;
-    int gap = (len / 2) + (len % 2);
+    int gap = (len / 2) + (len % 2); // findng the ceil value by this method
     while (gap)
     {
         int left = 0;
@@ -193,9 +193,9 @@ int solve(vector<int> vt)
     while (fast != slow)
     {
         slow = vt[slow];
-        fast = vt[vt[fast]];
+        fast = vt[fast];
     }
-    return vt[fast];
+    return fast;
 }
 int main()
 {
@@ -335,17 +335,17 @@ int majorityElement(vector<int> &nums)
             count--;
         }
     }
-    count=0;
-    for(int i=0;i<nums.size();i++)
+    count = 0;
+    for (int i = 0; i < nums.size(); i++)
     {
-        if(nums[i]==ele)
+        if (nums[i] == ele)
         {
             count++;
         }
     }
-    if(count>(nums.size()/2))
-    return ele;
-    //if no element present in the array is present more than (n/2) times
+    if (count > (nums.size() / 2))
+        return ele;
+    // if no element present in the array is present more than (n/2) times
     return -1;
 }
 
