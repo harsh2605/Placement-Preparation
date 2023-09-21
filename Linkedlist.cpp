@@ -540,3 +540,20 @@ vector<int> spiralOrder(vector<vector<int>> &matrix)
     }
     return ans;
 }
+
+// Reverse a linkedlist Recursive way
+ListNode *solve(ListNode *head)
+{
+    if (head->next == NULL)
+        return head;
+    ListNode *reverseNode = solve(head->next);
+    head->next->next = head;
+    head->next = NULL;
+    return reverseNode;
+}
+ListNode *reverseList(ListNode *head)
+{
+    if (head == NULL)
+        return head;
+    return solve(head);
+}

@@ -894,3 +894,128 @@ int sumRegion(int row1, int col1, int row2, int col2)
     }
     return sum;
 }
+
+// Finding factorial of larger number using array;
+#include <bits/stdc++.h>
+using namespace std;
+#define ull unsigned long long
+#define ll long long
+void solve(int n)
+{
+    vector<int> store;
+    store.push_back(1);
+    while (n--)
+    {
+        int carry = 0;
+        for (int i = 0; i < store.size(); i++)
+        {
+            int temp = store[i] * n + carry;
+            carry = carry / 10;
+            store[i] = temp % 10;
+            if (carry != 0)
+            {
+                store.push_back(carry);
+                break;
+            }
+        }
+    }
+    reverse(store.begin(), store.end());
+    for (int i = 0; i < store.size(); i++)
+    {
+        cout << store[i] << " ";
+    }
+}
+int main()
+{
+    int n;
+    cin >> n;
+    solve(n);
+    return 0;
+}
+
+// Array ADT raw implementation
+#include <bits/stdc++.h>
+using namespace std;
+#define ull unsigned long long
+#define ll long long
+class Arr_adt
+{
+private:
+    int *array;
+    int size;
+    int capacity;
+
+public:
+    Arr_adt() // making of constructor
+    {
+        capacity = 1;
+        size = 0;
+        array = new int[capacity];
+    }
+    Arr_adt(int capacity) // User defined
+    {
+        this->capacity = capacity;
+        size = 0;
+        array = new int[capacity];
+    }
+    int getCapacity() { return capacity; }
+    int getSize() { return size; }
+    void push_back(int value)
+    {
+        if (size == capacity)
+        {
+            growArray();
+        }
+        array[size] = value;
+        size++;
+    }
+    void pop_back()
+    {
+        array[size - 1] = 0;
+        size--;
+        if (size == (capacity / 2))
+        {
+            shrinkArray();
+        }
+    }
+    void growArray()
+    {
+        int *temp = new int[capacity * 2];
+        capacity *= 2;
+        for (int i = 0; i < size; i++)
+        {
+            temp[i] = array[i];
+        }
+        delete[] array;
+        array = temp;
+    }
+    void shrinkArray()
+    {
+        capacity = size;
+        int *temp = new int[capacity];
+        for (int i = 0; i < size; i++)
+        {
+            temp[i] = array[i];
+        }
+        delete[] array;
+        array = temp;
+    }
+    void print_array()
+    {
+        for (int i = 0; i < size; i++)
+        {
+            cout << array[i] << " ";
+        }
+    }
+};
+int main()
+{
+    Arr_adt arr;
+    arr.push_back(5);
+    arr.push_back(7);
+    arr.push_back(9);
+    arr.push_back(10);
+    arr.print_array();
+    return 0;
+}
+
