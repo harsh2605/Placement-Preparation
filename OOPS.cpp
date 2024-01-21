@@ -253,7 +253,7 @@ int main()
     return 0;
 }
 
-// To overcome early binding we have to do late binding wit the use of virtual keyword
+// To overcome early binding we have to do late binding with the use of virtual keyword
 #include <bits/stdc++.h>
 using namespace std;
 #define ull unsigned long long

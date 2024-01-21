@@ -363,7 +363,7 @@ int miceAndCheese(vector<int> &r1, vector<int> &r2, int k)
 
 // Very intresting question if we solve this question using linkedlist the time complexity will be O(N) but with the help of a array the time complexity will be O(N^2);
 //  Remove Zero Sum Consecutive Nodes from Linked List
-// In this question we have to remve the subarray whose sum is 0
+// In this question we have to remove the subarray whose sum is 0
 ListNode *removeZeroSumSublists(ListNode *head)
 {
     ListNode *dummy = new ListNode(0);

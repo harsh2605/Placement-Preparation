@@ -1,4 +1,4 @@
-//Inserting a node in AVL tree which is also called self balancing tree
+// Inserting a node in AVL tree which is also called self balancing tree
 #include <bits/stdc++.h>
 using namespace std;
 #define ull unsigned long long
@@ -73,7 +73,7 @@ Node *lrrotation(Node *p)
     Node *plr = pl->rightch;
     p->leftch = plr->rightch;
     pl->rightch = plr->leftch;
-     plr->leftch = pl;
+    plr->leftch = pl;
     plr->rightch = p;
     p->height = set_height(p);
     pl->height = set_height(pl);
@@ -86,22 +86,23 @@ Node *lrrotation(Node *p)
 }
 Node *rlrotation(Node *p)
 {
-   Node* pr = p->rightch;
-    Node* prl = pr->leftch;
- 
+    Node *pr = p->rightch;
+    Node *prl = pr->leftch;
+
     pr->leftch = prl->rightch;
     p->rightch = prl->leftch;
- 
-    prl->rightch= pr;
+
+    prl->rightch = pr;
     prl->leftch = p;
- 
+
     // Update height
     pr->height = set_height(pr);
     p->height = set_height(p);
     prl->height = set_height(prl);
- 
+
     // Update root
-    if (root == p){
+    if (root == p)
+    {
         root = prl;
     }
     return prl;
